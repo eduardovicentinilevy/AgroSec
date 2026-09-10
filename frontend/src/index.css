@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-canopy-950 text-canopy-50 antialiased;
+    background-image:
+      radial-gradient(120% 90% at 10% -10%, rgba(72, 191, 135, 0.18) 0%, rgba(7, 31, 24, 0) 55%),
+      radial-gradient(80% 60% at 100% 0%, rgba(249, 171, 31, 0.12) 0%, rgba(7, 31, 24, 0) 50%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-canopy-900/60 backdrop-blur-xl border border-canopy-700/40 shadow-canopy;
+  }
+
+  .leaf-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  .leaf-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-canopy-700/60 rounded-full;
+  }
+  .leaf-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+}

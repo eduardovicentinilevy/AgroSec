@@ -22,6 +22,28 @@ mapeamento entre o MVP local e a arquitetura GCP de produção.
 | `backend/` | API core: auth, nós operacionais, eventos, alertas, sync offline, LGPD | Node.js, Express, PostgreSQL |
 | `security-engine/` | Correlação de IoCs e detecção de anomalias (SIEM-Lite) | Python, FastAPI |
 | `edge-gateway/` | Simulador de gateway de campo offline-first | Node.js, SQLite |
+| `frontend/` | Painel web — visão geral, nós, alertas, IoCs e LGPD | React, Vite, Tailwind CSS |
+
+## Frontend
+
+Interface com identidade visual inspirada nos biomas brasileiros (Amazônia,
+Mata Atlântica, Cerrado, Caatinga, Pantanal, Pampa): paleta verde-floresta
+profunda com acentos dourados de luz solar filtrada pela copa, cartões em
+vidro fosco, formas orgânicas e badges de severidade em tons de terracota
+(Caatinga) e água (Pantanal).
+
+Páginas: Login/Cadastro, Visão geral (com gráfico de alertas por
+severidade), Nós operacionais (com isolamento Zero Trust de um clique),
+Alertas SIEM-Lite (triagem e contenção), Indicadores de comprometimento
+(IoCs) e o módulo LGPD completo (titulares, consentimentos, solicitações e
+mapeamento de dados).
+
+```bash
+cd frontend
+cp .env.example .env   # ajuste VITE_API_URL se o backend não estiver em localhost:3000
+npm install
+npm run dev             # http://localhost:5173
+```
 
 ## Módulos funcionais (conforme a pesquisa de mercado)
 
@@ -48,7 +70,8 @@ Isso sobe:
 - `postgres` (porta 5432) com o schema já migrado automaticamente;
 - `backend` (porta 3000) — API RESTful;
 - `security-engine` (porta 8000) — motor de correlação, com um loop de
-  polling em background e endpoints `/health`, `/stats`, `/run-cycle`.
+  polling em background e endpoints `/health`, `/stats`, `/run-cycle`;
+- `frontend` (porta 5173) — painel web servido via nginx.
 
 ## Como rodar localmente sem Docker
 
