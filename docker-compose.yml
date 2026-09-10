@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: agrosec
+      POSTGRES_PASSWORD: agrosec
+      POSTGRES_DB: agrosec
+    ports:
+      - "5432:5432"
+    volumes:
+      - agrosec_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agrosec"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      NODE_ENV: development
+      DATABASE_URL: postgres://agrosec:agrosec@postgres:5432/agrosec
+      JWT_SECRET: change-me-in-production
+      JWT_EXPIRES_IN: 8h
+      INTERNAL_SERVICE_TOKEN: change-me-internal-token
+    ports:
+      - "3000:3000"
+    command: sh -c "node scripts/migrate.js && node src/server.js"
+
+  security-engine:
+    build: ./security-engine
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: http://backend:3000
+      INTERNAL_SERVICE_TOKEN: change-me-internal-token
+      POLL_INTERVAL_SECONDS: 5
+    ports:
+      - "8000:8000"
+
+volumes:
+  agrosec_pgdata:
