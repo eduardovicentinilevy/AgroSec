@@ -13,6 +13,7 @@ export default function Nodes() {
   const [form, setForm] = useState({ name: '', nodeType: 'balanca', vlanSegment: '' });
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [actionError, setActionError] = useState('');
 
   const load = () =>
     api
@@ -42,9 +43,14 @@ export default function Nodes() {
   };
 
   const toggleIsolation = async (node) => {
-    if (node.status === 'isolated') await api.restoreNode(node.id);
-    else await api.isolateNode(node.id);
-    load();
+    setActionError('');
+    try {
+      if (node.status === 'isolated') await api.restoreNode(node.id);
+      else await api.isolateNode(node.id);
+      load();
+    } catch (err) {
+      setActionError(err.message);
+    }
   };
 
   return (
@@ -62,6 +68,8 @@ export default function Nodes() {
           <Plus className="h-4 w-4" /> Novo nó
         </Button>
       </header>
+
+      <ErrorBanner message={actionError} />
 
       {loading ? (
         <div className="flex h-48 items-center justify-center">

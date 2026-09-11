@@ -1,6 +1,5 @@
-const { randomUUID } = require('crypto');
 const fetch = require('node-fetch');
-const { getUnsyncedBatch, markSynced, countUnsynced } = require('./db');
+const { getNextBatch, markSynced, countUnsynced } = require('./db');
 
 let simulatedOffline = false;
 
@@ -10,18 +9,20 @@ function setSimulatedOffline(value) {
 
 // Monitora "conectividade" (aqui, uma flag simulada) e, quando disponível,
 // empacota os registros pendentes em um lote e envia ao backend. O
-// client_batch_id garante idempotência caso o envio seja repetido após
-// uma falha de rede a meio caminho.
+// client_batch_id é atribuído e persistido localmente antes do envio (ver
+// getNextBatch em db.js), garantindo idempotência real: se o envio falhar
+// depois do servidor já ter persistido o lote, a próxima tentativa reenvia
+// o MESMO id e reconhece a resposta como duplicata em vez de inserir tudo
+// de novo.
 async function trySync({ backendUrl, apiToken, nodeId }) {
   if (simulatedOffline) {
     console.log(`[edge-gateway] offline (simulado) — ${countUnsynced()} registro(s) na fila local`);
     return;
   }
 
-  const batch = getUnsyncedBatch(50);
+  const { batchId: clientBatchId, rows: batch } = getNextBatch(50);
   if (batch.length === 0) return;
 
-  const clientBatchId = randomUUID();
   const records = batch.map((row) => ({
     eventType: row.event_type,
     sourceIp: row.source_ip,

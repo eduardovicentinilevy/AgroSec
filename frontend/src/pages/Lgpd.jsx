@@ -80,8 +80,23 @@ export default function Lgpd() {
   };
 
   const handleRevokeConsent = async (id) => {
-    await api.revokeConsent(id);
-    loadAll();
+    setError('');
+    try {
+      await api.revokeConsent(id);
+      loadAll();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const changeTab = (key) => {
+    setError('');
+    setTab(key);
+  };
+
+  const openModal = (setModal) => {
+    setError('');
+    setModal(true);
   };
 
   const handleCreateRequest = async (e) => {
@@ -125,7 +140,7 @@ export default function Lgpd() {
         {TABS.map((t) => (
           <button
             key={t.key}
-            onClick={() => setTab(t.key)}
+            onClick={() => changeTab(t.key)}
             className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
               tab === t.key
                 ? 'bg-gradient-to-r from-canopy-600 to-canopy-700 text-white shadow-lg shadow-canopy-900/30'
@@ -146,7 +161,7 @@ export default function Lgpd() {
           {tab === 'subjects' && (
             <section className="space-y-4">
               <div className="flex justify-end">
-                <Button onClick={() => setSubjectModal(true)}>
+                <Button onClick={() => openModal(setSubjectModal)}>
                   <Plus className="h-4 w-4" /> Novo titular
                 </Button>
               </div>
@@ -169,10 +184,11 @@ export default function Lgpd() {
           {tab === 'consents' && (
             <section className="space-y-4">
               <div className="flex justify-end">
-                <Button onClick={() => setConsentModal(true)} disabled={subjects.length === 0}>
+                <Button onClick={() => openModal(setConsentModal)} disabled={subjects.length === 0}>
                   <Plus className="h-4 w-4" /> Novo consentimento
                 </Button>
               </div>
+              <ErrorBanner message={error} />
               {consents.length === 0 ? (
                 <EmptyState icon={ScrollText} title="Nenhum consentimento registrado" description="Registre o consentimento do titular antes de tratar seus dados pessoais." />
               ) : (
@@ -270,7 +286,7 @@ export default function Lgpd() {
           {tab === 'mapping' && (
             <section className="space-y-4">
               <div className="flex justify-end">
-                <Button onClick={() => setMappingModal(true)}>
+                <Button onClick={() => openModal(setMappingModal)}>
                   <Plus className="h-4 w-4" /> Novo mapeamento
                 </Button>
               </div>

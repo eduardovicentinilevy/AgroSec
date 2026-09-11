@@ -1,18 +1,23 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
-// Lido de forma síncrona no carregamento do módulo (antes de qualquer efeito
-// React rodar) para evitar que a primeira requisição de uma página protegida
-// saia sem o header Authorization logo após um refresh completo.
-function readStoredToken() {
+// Chave e leitor de localStorage compartilhados com AuthContext, para que a
+// sessão persistida nunca seja parseada (ou reformatada) em dois lugares
+// diferentes de forma independente.
+export const STORAGE_KEY = 'agrosec.session';
+
+export function getStoredSession() {
   try {
-    const raw = localStorage.getItem('agrosec.session');
-    return raw ? JSON.parse(raw).token : null;
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 }
 
-let authToken = readStoredToken();
+// Lido de forma síncrona no carregamento do módulo (antes de qualquer efeito
+// React rodar) para evitar que a primeira requisição de uma página protegida
+// saia sem o header Authorization logo após um refresh completo.
+let authToken = getStoredSession()?.token || null;
 
 function setToken(token) {
   authToken = token;

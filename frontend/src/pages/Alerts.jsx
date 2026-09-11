@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ShieldAlert, ShieldOff } from 'lucide-react';
 import { api } from '../api/client.js';
-import { Card, Button, Select, Spinner, EmptyState } from '../components/ui.jsx';
+import { Card, Button, Select, Spinner, EmptyState, ErrorBanner } from '../components/ui.jsx';
 import { SeverityBadge, AlertStatusBadge } from '../components/badges.jsx';
 
 const STATUS_OPTIONS = [
@@ -17,13 +17,21 @@ export default function Alerts() {
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('');
+  const [actionError, setActionError] = useState('');
+  const requestIdRef = useRef(0);
 
-  const load = (status) =>
-    api
+  const load = (status) => {
+    const requestId = ++requestIdRef.current;
+    return api
       .listAlerts(status ? { status } : {})
-      .then(setAlerts)
+      .then((data) => {
+        if (requestId === requestIdRef.current) setAlerts(data);
+      })
       .catch((err) => console.error('Falha ao carregar alertas:', err))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        if (requestId === requestIdRef.current) setLoading(false);
+      });
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -31,13 +39,23 @@ export default function Alerts() {
   }, [statusFilter]);
 
   const handleStatusChange = async (id, status) => {
-    await api.updateAlertStatus(id, status);
-    load(statusFilter);
+    setActionError('');
+    try {
+      await api.updateAlertStatus(id, status);
+      load(statusFilter);
+    } catch (err) {
+      setActionError(err.message);
+    }
   };
 
   const handleContain = async (id) => {
-    await api.containAlert(id);
-    load(statusFilter);
+    setActionError('');
+    try {
+      await api.containAlert(id);
+      load(statusFilter);
+    } catch (err) {
+      setActionError(err.message);
+    }
   };
 
   return (
@@ -59,6 +77,8 @@ export default function Alerts() {
           ))}
         </Select>
       </header>
+
+      <ErrorBanner message={actionError} />
 
       {loading ? (
         <div className="flex h-48 items-center justify-center">

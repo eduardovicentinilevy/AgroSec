@@ -37,9 +37,10 @@ export default function Dashboard() {
     const online = nodes.filter((n) => n.status === 'online').length;
     const isolated = nodes.filter((n) => n.status === 'isolated').length;
     const openAlerts = alerts.filter((a) => !['resolved', 'false_positive'].includes(a.status));
-    const avgMttd =
-      alerts.filter((a) => a.mttd_seconds).reduce((sum, a) => sum + a.mttd_seconds, 0) /
-        (alerts.filter((a) => a.mttd_seconds).length || 1) || 0;
+    const timedAlerts = alerts.filter((a) => a.mttd_seconds != null);
+    const avgMttd = timedAlerts.length
+      ? timedAlerts.reduce((sum, a) => sum + a.mttd_seconds, 0) / timedAlerts.length
+      : 0;
 
     return { online, isolated, openAlerts: openAlerts.length, avgMttd: Math.round(avgMttd) };
   }, [nodes, alerts]);

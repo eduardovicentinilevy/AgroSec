@@ -15,6 +15,7 @@ import os
 import time
 from collections import defaultdict
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 
 import httpx
 from dotenv import load_dotenv
@@ -79,6 +80,22 @@ async def mark_processed(client: httpx.AsyncClient, event_ids):
     resp.raise_for_status()
 
 
+def compute_mttd_seconds(event):
+    """Tempo médio de detecção real: do instante em que o evento chegou ao
+    backend (received_at) até agora, e não apenas o tempo de processamento
+    dentro deste ciclo de correlação — que seria quase sempre sub-segundo e
+    esconderia o atraso real introduzido pelo intervalo de polling."""
+    received_at = event.get("received_at") or event.get("occurred_at")
+    if not received_at:
+        return None
+    try:
+        received_dt = datetime.fromisoformat(str(received_at).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    delta = (datetime.now(timezone.utc) - received_dt).total_seconds()
+    return max(0, round(delta))
+
+
 def match_ioc(event, iocs):
     source_ip = event.get("source_ip")
     if not source_ip:
@@ -94,7 +111,6 @@ async def run_correlation_cycle(client: httpx.AsyncClient):
     regras comportamentais, publica alertas e marca eventos como processados.
     Equivale ao corpo de uma Cloud Function acionada por uma mensagem Pub/Sub."""
 
-    cycle_start = time.monotonic()
     events = await fetch_pending_events(client)
     if not events:
         stats["last_cycle_at"] = time.time()
@@ -121,7 +137,7 @@ async def run_correlation_cycle(client: httpx.AsyncClient):
             }
 
         if finding:
-            mttd_seconds = int(time.monotonic() - cycle_start) + 1
+            mttd_seconds = compute_mttd_seconds(event)
             await publish_alert(
                 client,
                 org_id=event["org_id"],

@@ -1,19 +1,10 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { api } from '../api/client';
+import { api, STORAGE_KEY, getStoredSession } from '../api/client';
 
 const AuthContext = createContext(null);
 
-const STORAGE_KEY = 'agrosec.session';
-
 export function AuthProvider({ children }) {
-  const [session, setSession] = useState(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [session, setSession] = useState(() => getStoredSession());
 
   // Sincronizado imediatamente (não em um useEffect) para que a primeira
   // requisição disparada pela página de destino, logo após login/registro,
