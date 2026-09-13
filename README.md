@@ -15,6 +15,14 @@ correlação de eventos, IoCs, triagem de incidentes).
 Veja `docs/ARCHITECTURE.md` para o detalhamento técnico completo e o
 mapeamento entre o MVP local e a arquitetura GCP de produção.
 
+## Capturas de tela
+
+| | |
+|---|---|
+| ![Login](docs/screenshots/01-login.png) | ![Dashboard](docs/screenshots/03-dashboard.png) |
+| ![Nós operacionais](docs/screenshots/04-nos-operacionais.png) | ![Alertas](docs/screenshots/06-alertas.png) |
+| ![IoCs](docs/screenshots/07-iocs.png) | ![LGPD](docs/screenshots/08-lgpd-titulares.png) |
+
 ## Componentes
 
 | Diretório | Papel | Stack |
