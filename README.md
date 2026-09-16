@@ -19,9 +19,10 @@ mapeamento entre o MVP local e a arquitetura GCP de produção.
 
 | | |
 |---|---|
-| ![Login](docs/screenshots/01-login.png) | ![Dashboard](docs/screenshots/03-dashboard.png) |
+| ![Login](docs/screenshots/01-login.png) | ![Dashboard](docs/screenshots/19-dashboard-sidebar-atualizada.png) |
 | ![Nós operacionais](docs/screenshots/04-nos-operacionais.png) | ![Alertas](docs/screenshots/06-alertas.png) |
-| ![IoCs](docs/screenshots/07-iocs.png) | ![LGPD](docs/screenshots/08-lgpd-titulares.png) |
+| ![Equipe](docs/screenshots/12-equipe.png) | ![Plano & Faturamento](docs/screenshots/15-plano-ativo.png) |
+| ![Menu mobile](docs/screenshots/21-mobile-menu-aberto.png) | ![LGPD](docs/screenshots/08-lgpd-titulares.png) |
 
 ## Componentes
 
@@ -42,9 +43,13 @@ vidro fosco, formas orgânicas e badges de severidade em tons de terracota
 
 Páginas: Login/Cadastro, Visão geral (com gráfico de alertas por
 severidade), Nós operacionais (com isolamento Zero Trust de um clique),
-Alertas SIEM-Lite (triagem e contenção), Indicadores de comprometimento
-(IoCs) e o módulo LGPD completo (titulares, consentimentos, solicitações e
-mapeamento de dados).
+Alertas SIEM-Lite (triagem e contenção), Eventos (log de telemetria bruta),
+Indicadores de comprometimento (IoCs), o módulo LGPD completo (titulares,
+consentimentos, solicitações e mapeamento de dados), Equipe (RBAC —
+convidar colaboradores e gerenciar papéis), Plano & Faturamento (ativação
+de assinatura por hectare/nó/complemento de conformidade) e Configurações
+(dados da organização e da conta). A sidebar vira um menu off-canvas com
+botão hambúrguer em telas estreitas.
 
 ```bash
 cd frontend
@@ -169,6 +174,10 @@ para demonstrar a resiliência a instabilidades de rede rural.
 | POST | `/api/alerts/:id/contain` | Contenção automatizada |
 | POST | `/api/sync/batch` | Sincronização em lote (edge gateway) |
 | GET/POST | `/api/lgpd/data-subjects`, `/consents`, `/requests`, `/data-mapping` | Automação LGPD |
+| GET/POST | `/api/users` | Equipe (RBAC) — listar/convidar colaboradores |
+| PATCH/DELETE | `/api/users/:id/role`, `/api/users/:id` | Alterar papel / remover colaborador |
+| GET/POST | `/api/subscriptions/current`, `/api/subscriptions` | Plano ativo e ativação de assinatura |
+| GET/PATCH | `/api/organizations/mine` | Dados da organização |
 
 ## Alinhamento com o modelo de negócio
 

@@ -66,7 +66,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <header>
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-canopy-500">Visão geral</p>
+        <p className="kicker">Visão geral</p>
         <h1 className="mt-1 font-display text-3xl text-canopy-50">
           Imunidade operacional da sua safra digital
         </h1>

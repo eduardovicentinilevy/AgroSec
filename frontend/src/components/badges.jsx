@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldAlert, ShieldCheck, ShieldQuestion, Wifi, WifiOff, ShieldOff } from 'lucide-react';
+import { ShieldAlert, ShieldCheck, ShieldQuestion, Wifi, WifiOff, ShieldOff, Crown, Eye, SearchCheck, Tractor } from 'lucide-react';
 
 const SEVERITY_STYLES = {
   critical: 'bg-caatinga-600/20 text-caatinga-400 border-caatinga-600/40',
@@ -60,4 +60,41 @@ export const NODE_TYPE_LABELS = {
   servidor_erp: 'Servidor ERP',
   sensor_iot: 'Sensor IoT',
   estacao_trabalho: 'Estação de trabalho',
+};
+
+const ROLE_STYLES = {
+  admin: { style: 'bg-sun-500/15 text-sun-300 border-sun-500/30', icon: Crown, label: 'Administrador' },
+  analyst: { style: 'bg-canopy-600/20 text-canopy-300 border-canopy-600/40', icon: SearchCheck, label: 'Analista' },
+  field_operator: { style: 'bg-pantanal-500/15 text-pantanal-400 border-pantanal-500/30', icon: Tractor, label: 'Operador de campo' },
+  viewer: { style: 'bg-bark-700/40 text-bark-200 border-bark-600/50', icon: Eye, label: 'Visualizador' },
+};
+
+export function RoleBadge({ role }) {
+  const cfg = ROLE_STYLES[role] || ROLE_STYLES.viewer;
+  const Icon = cfg.icon;
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${cfg.style}`}>
+      <Icon className="h-3.5 w-3.5" />
+      {cfg.label}
+    </span>
+  );
+}
+
+export const ROLE_LABELS = {
+  admin: 'Administrador',
+  analyst: 'Analista',
+  field_operator: 'Operador de campo',
+  viewer: 'Visualizador',
+};
+
+export const PLAN_TYPE_LABELS = {
+  per_hectare: 'Por hectare monitorado',
+  per_node: 'Por nó operacional protegido',
+  compliance_addon: 'Complemento de conformidade',
+};
+
+export const ORG_SEGMENT_LABELS = {
+  cooperativa_trading: 'Cooperativa / Trading',
+  propriedade_precisao: 'Propriedade de agricultura de precisão',
+  agtech_parceira: 'AgTech parceira / fabricante',
 };

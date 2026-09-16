@@ -78,4 +78,15 @@ export const api = {
   fulfillDataRequest: (id) => request(`/lgpd/requests/${id}/fulfill`, { method: 'POST' }),
   listDataMapping: () => request('/lgpd/data-mapping'),
   createDataMapping: (payload) => request('/lgpd/data-mapping', { method: 'POST', body: payload }),
+
+  listUsers: () => request('/users'),
+  inviteUser: (payload) => request('/users', { method: 'POST', body: payload }),
+  updateUserRole: (id, role) => request(`/users/${id}/role`, { method: 'PATCH', body: { role } }),
+  removeUser: (id) => request(`/users/${id}`, { method: 'DELETE' }),
+
+  getCurrentSubscription: () => request('/subscriptions/current'),
+  createSubscription: (payload) => request('/subscriptions', { method: 'POST', body: payload }),
+
+  getMyOrganization: () => request('/organizations/mine'),
+  updateMyOrganization: (payload) => request('/organizations/mine', { method: 'PATCH', body: payload }),
 };

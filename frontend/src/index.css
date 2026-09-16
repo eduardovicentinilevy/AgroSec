@@ -18,15 +18,82 @@
   h1, h2, h3, h4 {
     @apply font-display;
   }
+
+  ::selection {
+    @apply bg-sun-500/30 text-canopy-50;
+  }
+
+  /* Anel de foco consistente para qualquer elemento interativo que não
+     defina seu próprio estado de :focus (Input/Select já têm o deles). */
+  :focus-visible {
+    outline: 2px solid theme('colors.sun.400');
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {
   .glass-panel {
-    @apply bg-canopy-900/60 backdrop-blur-xl border border-canopy-700/40 shadow-canopy;
+    @apply relative bg-canopy-900/60 backdrop-blur-xl border border-canopy-700/40 shadow-canopy;
   }
 
+  /* Fina linha de luz no topo do painel, reforçando a sensação de vidro. */
+  .glass-panel::before {
+    content: '';
+    @apply pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-[inherit];
+    background: linear-gradient(90deg, transparent, rgba(215, 245, 227, 0.35), transparent);
+  }
+
+  .glass-panel-interactive {
+    @apply glass-panel transition-all duration-200 hover:border-canopy-500/50 hover:shadow-[0_24px_70px_-24px_rgba(7,31,24,0.6)];
+  }
+
+  /* Rótulo pequeno em versal usado no topo de quase toda página/seção. */
+  .kicker {
+    @apply text-xs font-medium uppercase tracking-[0.2em] text-canopy-500;
+  }
+
+  .link {
+    @apply font-medium text-sun-400 transition-colors hover:text-sun-300;
+  }
+
+  .divider {
+    @apply border-t border-canopy-800/60;
+  }
+
+  /* Placeholder de carregamento com brilho passando — usado em listas/tabelas
+     enquanto os dados ainda não chegaram, no lugar de um spinner central. */
+  .skeleton {
+    @apply relative overflow-hidden rounded-xl bg-canopy-800/40;
+  }
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      rgba(215, 245, 227, 0.12),
+      transparent
+    );
+    animation: shimmer 1.6s infinite;
+  }
+
+  .leaf-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.canopy.700') transparent;
+  }
   .leaf-scrollbar::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
   .leaf-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-canopy-700/60 rounded-full;

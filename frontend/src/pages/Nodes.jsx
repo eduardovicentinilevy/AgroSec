@@ -57,7 +57,7 @@ export default function Nodes() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-canopy-500">Infraestrutura de campo</p>
+          <p className="kicker">Infraestrutura de campo</p>
           <h1 className="mt-1 font-display text-3xl text-canopy-50">Nós operacionais</h1>
           <p className="mt-2 max-w-xl text-sm text-canopy-400">
             Balanças, gateways industriais, estações e servidores — a superfície monitorada

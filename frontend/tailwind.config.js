@@ -73,6 +73,19 @@ export default {
       borderRadius: {
         organic: '42% 58% 63% 37% / 41% 42% 58% 59%',
       },
+      keyframes: {
+        fadeSlideIn: {
+          '0%': { opacity: '0', transform: 'translateY(6px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        },
+      },
+      animation: {
+        'fade-slide-in': 'fadeSlideIn 0.35s ease-out both',
+        shimmer: 'shimmer 1.6s infinite',
+      },
     },
   },
   plugins: [],

@@ -128,7 +128,7 @@ export default function Lgpd() {
   return (
     <div className="space-y-6">
       <header>
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-canopy-500">Conformidade</p>
+        <p className="kicker">Conformidade</p>
         <h1 className="mt-1 font-display text-3xl text-canopy-50">LGPD &amp; Privacidade de Dados</h1>
         <p className="mt-2 max-w-2xl text-sm text-canopy-400">
           Mapeamento de dados, gestão de consentimento e atendimento a solicitações de

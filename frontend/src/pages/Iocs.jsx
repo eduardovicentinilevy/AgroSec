@@ -50,7 +50,7 @@ export default function Iocs() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-canopy-500">Threat intel</p>
+          <p className="kicker">Threat intel</p>
           <h1 className="mt-1 font-display text-3xl text-canopy-50">Indicadores de comprometimento</h1>
           <p className="mt-2 max-w-xl text-sm text-canopy-400">
             Base de IoCs consultada pelo security-engine em cada ciclo de correlação de eventos.

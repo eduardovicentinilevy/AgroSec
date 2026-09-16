@@ -16,8 +16,27 @@ export function Button({ variant = 'primary', className = '', children, disabled
   );
 }
 
-export function Card({ className = '', children }) {
-  return <div className={`glass-panel rounded-3xl p-6 ${className}`}>{children}</div>;
+export function Card({ className = '', interactive = false, children, ...props }) {
+  const base = interactive ? 'glass-panel-interactive' : 'glass-panel';
+  return (
+    <div className={`${base} rounded-3xl p-6 ${className}`} {...props}>
+      {children}
+    </div>
+  );
+}
+
+export function Skeleton({ className = 'h-4 w-full' }) {
+  return <div className={`skeleton ${className}`} />;
+}
+
+export function SkeletonRows({ rows = 3, className = 'h-16' }) {
+  return (
+    <div className="space-y-3">
+      {Array.from({ length: rows }).map((_, i) => (
+        <Skeleton key={i} className={className} />
+      ))}
+    </div>
+  );
 }
 
 export function Input({ label, className = '', ...props }) {
@@ -25,7 +44,7 @@ export function Input({ label, className = '', ...props }) {
     <label className="block">
       {label && <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-canopy-300">{label}</span>}
       <input
-        className={`w-full rounded-xl border border-canopy-700/50 bg-canopy-950/60 px-3.5 py-2.5 text-sm text-canopy-50 placeholder:text-canopy-500 outline-none transition focus:border-sun-400 focus:ring-2 focus:ring-sun-400/30 ${className}`}
+        className={`w-full rounded-xl border border-canopy-700/50 bg-canopy-950/60 px-3.5 py-2.5 text-sm text-canopy-50 placeholder:text-canopy-500 outline-none transition focus:border-sun-400 focus:ring-2 focus:ring-sun-400/30 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
         {...props}
       />
     </label>
@@ -37,7 +56,7 @@ export function Select({ label, className = '', children, ...props }) {
     <label className="block">
       {label && <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-canopy-300">{label}</span>}
       <select
-        className={`w-full rounded-xl border border-canopy-700/50 bg-canopy-950/60 px-3.5 py-2.5 text-sm text-canopy-50 outline-none transition focus:border-sun-400 focus:ring-2 focus:ring-sun-400/30 ${className}`}
+        className={`w-full rounded-xl border border-canopy-700/50 bg-canopy-950/60 px-3.5 py-2.5 text-sm text-canopy-50 outline-none transition focus:border-sun-400 focus:ring-2 focus:ring-sun-400/30 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
         {...props}
       >
         {children}
@@ -85,6 +104,15 @@ export function ErrorBanner({ message }) {
   if (!message) return null;
   return (
     <div className="rounded-xl border border-caatinga-600/50 bg-caatinga-600/10 px-4 py-3 text-sm text-caatinga-400">
+      {message}
+    </div>
+  );
+}
+
+export function SuccessBanner({ message }) {
+  if (!message) return null;
+  return (
+    <div className="rounded-xl border border-canopy-500/50 bg-canopy-500/10 px-4 py-3 text-sm text-canopy-300">
       {message}
     </div>
   );

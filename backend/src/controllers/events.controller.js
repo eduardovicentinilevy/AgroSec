@@ -33,18 +33,26 @@ const ingestEvent = asyncHandler(async (req, res) => {
 });
 
 const listEvents = asyncHandler(async (req, res) => {
-  const { processed, limit = 50 } = req.query;
+  const { processed, eventType, limit = 50 } = req.query;
   const params = [req.user.org_id];
-  let where = 'org_id = $1';
+  let where = 'e.org_id = $1';
 
   if (processed !== undefined) {
     params.push(processed === 'true');
-    where += ` AND processed = $${params.length}`;
+    where += ` AND e.processed = $${params.length}`;
+  }
+  if (eventType) {
+    params.push(eventType);
+    where += ` AND e.event_type = $${params.length}`;
   }
 
   params.push(Number(limit));
   const result = await db.query(
-    `SELECT * FROM events WHERE ${where} ORDER BY occurred_at DESC LIMIT $${params.length}`,
+    `SELECT e.*, n.name AS node_name
+     FROM events e
+     LEFT JOIN nodes n ON n.id = e.node_id
+     WHERE ${where}
+     ORDER BY e.occurred_at DESC LIMIT $${params.length}`,
     params
   );
   res.json(result.rows);

@@ -62,7 +62,7 @@ export default function Alerts() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-canopy-500">SIEM-Lite</p>
+          <p className="kicker">SIEM-Lite</p>
           <h1 className="mt-1 font-display text-3xl text-canopy-50">Alertas correlacionados</h1>
           <p className="mt-2 max-w-xl text-sm text-canopy-400">
             Triagem estilo SOC Tier 1 — correlação automática de IoCs e regras
