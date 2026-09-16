@@ -98,3 +98,32 @@ export const ORG_SEGMENT_LABELS = {
   propriedade_precisao: 'Propriedade de agricultura de precisão',
   agtech_parceira: 'AgTech parceira / fabricante',
 };
+
+export const REPORT_TYPE_LABELS = {
+  auditability: 'Auditabilidade técnica',
+  rural_credit: 'Parecer para crédito rural',
+  export_compliance: 'Adequação para exportação',
+};
+
+export const CONTAINMENT_ACTION_LABELS = {
+  vlan_isolate: 'Isolamento de VLAN',
+  block_ip: 'Bloqueio de IP',
+  disable_node: 'Desativação do nó',
+};
+
+const CONTAINMENT_STATUS_STYLES = {
+  executed: { style: 'bg-caatinga-600/20 text-caatinga-400 border-caatinga-600/40', icon: ShieldOff, label: 'Ativa' },
+  rolled_back: { style: 'bg-canopy-600/20 text-canopy-300 border-canopy-600/40', icon: ShieldCheck, label: 'Revertida' },
+  failed: { style: 'bg-bark-700/40 text-bark-200 border-bark-600/50', icon: ShieldAlert, label: 'Falhou' },
+};
+
+export function ContainmentStatusBadge({ status }) {
+  const cfg = CONTAINMENT_STATUS_STYLES[status] || CONTAINMENT_STATUS_STYLES.executed;
+  const Icon = cfg.icon;
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium ${cfg.style}`}>
+      <Icon className="h-3.5 w-3.5" />
+      {cfg.label}
+    </span>
+  );
+}

@@ -13,6 +13,9 @@ import Events from './pages/Events.jsx';
 import Team from './pages/Team.jsx';
 import Subscription from './pages/Subscription.jsx';
 import Settings from './pages/Settings.jsx';
+import Reports from './pages/Reports.jsx';
+import Containment from './pages/Containment.jsx';
+import AssetMap from './pages/AssetMap.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 function ProtectedRoute({ children }) {
@@ -42,7 +45,10 @@ export default function App() {
         <Route path="alertas" element={<Alerts />} />
         <Route path="iocs" element={<Iocs />} />
         <Route path="eventos" element={<Events />} />
+        <Route path="contencoes" element={<Containment />} />
+        <Route path="mapa" element={<AssetMap />} />
         <Route path="lgpd" element={<Lgpd />} />
+        <Route path="relatorios" element={<Reports />} />
         <Route path="equipe" element={<Team />} />
         <Route path="plano" element={<Subscription />} />
         <Route path="configuracoes" element={<Settings />} />

@@ -4,9 +4,12 @@ import {
   LayoutDashboard,
   Radio,
   ShieldAlert,
+  ShieldOff,
   Fingerprint,
   ScrollText,
   Activity,
+  MapPinned,
+  FileText,
   Users,
   CreditCard,
   Settings as SettingsIcon,
@@ -19,10 +22,16 @@ import { useAuth } from '../context/AuthContext.jsx';
 const MONITORING_ITEMS = [
   { to: '/', label: 'Visão geral', icon: LayoutDashboard, end: true },
   { to: '/nos', label: 'Nós operacionais', icon: Radio },
+  { to: '/mapa', label: 'Mapa de ativos', icon: MapPinned },
   { to: '/alertas', label: 'Alertas SIEM-Lite', icon: ShieldAlert },
+  { to: '/contencoes', label: 'Contenções', icon: ShieldOff },
   { to: '/iocs', label: 'Indicadores (IoCs)', icon: Fingerprint },
   { to: '/eventos', label: 'Eventos', icon: Activity },
+];
+
+const COMPLIANCE_ITEMS = [
   { to: '/lgpd', label: 'LGPD & Privacidade', icon: ScrollText },
+  { to: '/relatorios', label: 'Relatórios', icon: FileText },
 ];
 
 const ORG_ITEMS = [
@@ -96,6 +105,12 @@ export default function Sidebar({ open = false, onClose }) {
 
         <nav className="leaf-scrollbar mt-8 flex-1 space-y-6 overflow-y-auto">
           <NavGroup items={MONITORING_ITEMS} onNavigate={onClose} />
+          <div>
+            <p className="mb-2 px-3.5 text-[10px] font-medium uppercase tracking-[0.18em] text-canopy-600">
+              Conformidade
+            </p>
+            <NavGroup items={COMPLIANCE_ITEMS} onNavigate={onClose} />
+          </div>
           <div>
             <p className="mb-2 px-3.5 text-[10px] font-medium uppercase tracking-[0.18em] text-canopy-600">
               Organização

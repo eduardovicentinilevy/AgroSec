@@ -10,7 +10,7 @@ export default function Nodes() {
   const [nodes, setNodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [form, setForm] = useState({ name: '', nodeType: 'balanca', vlanSegment: '' });
+  const [form, setForm] = useState({ name: '', nodeType: 'balanca', vlanSegment: '', latitude: '', longitude: '' });
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [actionError, setActionError] = useState('');
@@ -31,9 +31,13 @@ export default function Nodes() {
     setError('');
     setSaving(true);
     try {
-      await api.createNode(form);
+      await api.createNode({
+        ...form,
+        latitude: form.latitude === '' ? null : Number(form.latitude),
+        longitude: form.longitude === '' ? null : Number(form.longitude),
+      });
       setModalOpen(false);
-      setForm({ name: '', nodeType: 'balanca', vlanSegment: '' });
+      setForm({ name: '', nodeType: 'balanca', vlanSegment: '', latitude: '', longitude: '' });
       await load();
     } catch (err) {
       setError(err.message);
@@ -145,6 +149,27 @@ export default function Nodes() {
             onChange={(e) => setForm({ ...form, vlanSegment: e.target.value })}
             placeholder="VLAN-OT-10"
           />
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              label="Latitude (opcional)"
+              type="number"
+              step="any"
+              value={form.latitude}
+              onChange={(e) => setForm({ ...form, latitude: e.target.value })}
+              placeholder="-15.601"
+            />
+            <Input
+              label="Longitude (opcional)"
+              type="number"
+              step="any"
+              value={form.longitude}
+              onChange={(e) => setForm({ ...form, longitude: e.target.value })}
+              placeholder="-56.097"
+            />
+          </div>
+          <p className="text-xs text-canopy-500">
+            Usadas no Mapa de Ativos para posicionar o nó dentro da propriedade.
+          </p>
           <ErrorBanner message={error} />
           <Button type="submit" className="w-full" disabled={saving}>
             {saving ? 'Salvando...' : 'Cadastrar nó'}

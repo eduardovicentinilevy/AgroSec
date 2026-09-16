@@ -89,4 +89,11 @@ export const api = {
 
   getMyOrganization: () => request('/organizations/mine'),
   updateMyOrganization: (payload) => request('/organizations/mine', { method: 'PATCH', body: payload }),
+
+  listReports: () => request('/reports'),
+  getReport: (id) => request(`/reports/${id}`),
+  createReport: (payload) => request('/reports', { method: 'POST', body: payload }),
+
+  listContainmentActions: () => request('/containment'),
+  rollbackContainment: (id) => request(`/containment/${id}/rollback`, { method: 'POST' }),
 };

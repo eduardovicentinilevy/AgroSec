@@ -12,5 +12,7 @@ router.use('/iocs', require('./iocs.routes'));
 router.use('/users', require('./users.routes'));
 router.use('/subscriptions', require('./subscriptions.routes'));
 router.use('/organizations', require('./organizations.routes'));
+router.use('/reports', require('./reports.routes'));
+router.use('/containment', require('./containment.routes'));
 
 module.exports = router;
