@@ -97,6 +97,23 @@ Isso sobe:
 Suba um Postgres local (ou use `docker compose up postgres`) e ajuste
 `backend/.env` (copie de `.env.example`) com a `DATABASE_URL`.
 
+O valor padrão do `.env.example` (`postgres://agrosec:agrosec@localhost:5432/agrosec`)
+assume um usuário/banco chamado `agrosec` que **não existe** numa instalação
+nova do PostgreSQL — se você rodar `npm run migrate`/`npm run dev` sem criar
+isso antes, o backend responde com o erro `role "agrosec" não existe`.
+Duas opções:
+
+- **Criar o usuário/banco `agrosec`** (via `psql` como superusuário, ou pelo
+  pgAdmin no Windows):
+  ```sql
+  CREATE USER agrosec WITH PASSWORD 'agrosec' CREATEDB;
+  CREATE DATABASE agrosec OWNER agrosec;
+  ```
+- **Ou simplesmente apontar para o usuário que você já tem** — edite
+  `DATABASE_URL` em `backend/.env` com as credenciais reais da sua instalação
+  (ex.: `postgres://postgres:SUA_SENHA@localhost:5432/postgres`, usando a
+  senha definida na instalação do PostgreSQL).
+
 ### 2. Backend
 
 ```bash
@@ -202,6 +219,14 @@ conseguiu nem alcançar o backend (não é um erro de senha/validação,
    mensagem de CORS ali indica origem bloqueada (o backend já libera
    qualquer origem por padrão, então isso apontaria para outro backend
    rodando na porta 3000).
+
+**Login ou cadastro retorna `role "agrosec" não existe`** — o backend
+já está de pé e respondendo, mas o Postgres não tem o usuário/banco
+`agrosec` que o `DATABASE_URL` padrão espera (comum numa instalação nova
+do PostgreSQL, especialmente no Windows). Veja a seção
+**[1. PostgreSQL](#1-postgresql)** acima — crie o usuário/banco `agrosec`
+ou aponte `DATABASE_URL` para as credenciais que você já tem, depois
+rode `npm run migrate` de novo antes de reiniciar `npm run dev`.
 
 ## Endpoints principais da API
 
