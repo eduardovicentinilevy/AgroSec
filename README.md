@@ -56,12 +56,11 @@ assinatura por hectare/nó/complemento de conformidade) e Configurações
 (dados da organização e da conta). A sidebar vira um menu off-canvas com
 botão hambúrguer em telas estreitas.
 
-```bash
-cd frontend
-cp .env.example .env   # ajuste VITE_API_URL se o backend não estiver em localhost:3000
-npm install
-npm run dev             # http://localhost:5173
-```
+> ⚠️ O frontend **depende do backend já estar rodando** — ele é só a
+> interface, sem o backend nenhuma tela de login/cadastro funciona (dá
+> erro de "Failed to fetch"). Veja a ordem completa de setup na seção
+> **[Como rodar](#como-rodar-docker-compose)** logo abaixo antes de
+> executar `npm run dev`.
 
 ## Módulos funcionais (conforme a pesquisa de mercado)
 
@@ -118,7 +117,22 @@ pip install -r requirements.txt
 uvicorn app:app --reload
 ```
 
-### 4. Fluxo de teste manual (curl)
+### 4. Frontend
+
+Só depois do backend (passo 2) já estar rodando e respondendo em
+`http://localhost:3000/health`:
+
+```bash
+cd frontend
+cp .env.example .env   # ajuste VITE_API_URL se o backend não estiver em localhost:3000
+npm install
+npm run dev             # http://localhost:5173
+```
+
+Abra `http://localhost:5173/register` para criar a primeira conta —
+não existe usuário pré-cadastrado.
+
+### 5. Fluxo de teste manual (curl)
 
 ```bash
 # Registrar organização + usuário admin
@@ -150,7 +164,7 @@ curl -s -X POST http://localhost:8000/run-cycle
 curl -s http://localhost:3000/api/alerts -H "Authorization: Bearer SEU_TOKEN"
 ```
 
-### 5. Edge gateway (offline-first)
+### 6. Edge gateway (offline-first)
 
 ```bash
 cd edge-gateway
@@ -164,6 +178,30 @@ O gateway gera leituras simuladas a cada poucos segundos, grava tudo
 localmente em `data/gateway.db` (SQLite) e tenta sincronizar
 periodicamente — alternando entre ciclos "online" e "offline" simulados
 para demonstrar a resiliência a instabilidades de rede rural.
+
+## Resolução de problemas
+
+**Login ou cadastro retorna "Failed to fetch"** — o navegador não
+conseguiu nem alcançar o backend (não é um erro de senha/validação,
+é de conectividade). Verifique nesta ordem:
+
+1. O backend está rodando? Teste `curl http://localhost:3000/health`
+   — se der erro de conexão, o backend não subiu (falta rodar o passo
+   2, ou o Postgres não está acessível — confira o log do backend).
+2. O frontend está apontando para o backend certo? Confira o arquivo
+   `frontend/.env` — a variável `VITE_API_URL` precisa bater com onde
+   o backend realmente está escutando. Se você mudou esse arquivo,
+   **reinicie** `npm run dev` (o Vite só lê `.env` na inicialização).
+3. Rodando via Docker Compose num servidor remoto (VM, Codespace, VPS)?
+   `VITE_API_URL` é embutido no build do frontend — `http://localhost:3000`
+   só funciona se o navegador estiver na mesma máquina dos containers.
+   Rode `docker compose build --build-arg VITE_API_URL=http://SEU_HOST:3000 frontend`
+   (ou ajuste o `args` em `docker-compose.yml`) apontando para o
+   host/IP que o seu navegador realmente consegue alcançar.
+4. Abra o DevTools do navegador (F12 → aba Console/Network) — uma
+   mensagem de CORS ali indica origem bloqueada (o backend já libera
+   qualquer origem por padrão, então isso apontaria para outro backend
+   rodando na porta 3000).
 
 ## Endpoints principais da API
 
